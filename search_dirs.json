@@ -1,0 +1,11 @@
+{
+    "iwadDir": "D:/doom/iwads/",
+    "modDir": "D:/doom/mods/",
+    "sourcePorts": [
+        "D:/doom/Cherry-Doom-2.0.0-win64/cherry-doom.exe",
+        "D:/doom/chocolate-doom-3.1.1-win64/chocolate-doom.exe",
+        "D:/doom/dsda-doom-0.29.4-win-x64/dsda-doom.exe",
+        "D:/doom/Windows-UZDoom-4.14.3/uzdoom.exe",
+        "D:/doom/Woof-15.3.0-win64/woof.exe"
+    ]
+}
