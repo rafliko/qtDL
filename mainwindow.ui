@@ -90,11 +90,42 @@
      <x>0</x>
      <y>0</y>
      <width>472</width>
-     <height>21</height>
+     <height>30</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionAdd_Source_Port"/>
+    <addaction name="actionAdd_IWAD_dir"/>
+    <addaction name="actionChange_mod_dir"/>
+    <addaction name="separator"/>
+    <addaction name="actionClear_Source_Ports"/>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionAdd_Source_Port">
+   <property name="text">
+    <string>Add Source Port</string>
+   </property>
+  </action>
+  <action name="actionAdd_IWAD_dir">
+   <property name="text">
+    <string>Change IWAD Dir</string>
+   </property>
+  </action>
+  <action name="actionChange_mod_dir">
+   <property name="text">
+    <string>Change Mod Dir</string>
+   </property>
+  </action>
+  <action name="actionClear_Source_Ports">
+   <property name="text">
+    <string>Clear Source Ports</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

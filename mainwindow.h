@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QJsonArray>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -17,20 +18,19 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
 
-    static int readJson(QString path);
-
 private slots:
     void on_playButton_clicked();
 
-    void on_spCombo_currentTextChanged(const QString &arg1);
+    QStringList getDirItems(QString path);
 
-    void on_iwadCombo_currentTextChanged(const QString &arg1);
+    int readJson(QString path);
 
-    void on_argsEdit_textChanged(const QString &arg1);
-
-    void on_modList_itemSelectionChanged();
+    void on_actionAdd_Source_Port_triggered();
 
 private:
     Ui::MainWindow *ui;
+    QString iwadDir;
+    QString modDir;
+    QJsonArray sourcePorts;
 };
 #endif // MAINWINDOW_H

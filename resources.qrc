@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>search_dirs.json</file>
+    </qresource>
+</RCC>

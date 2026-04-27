@@ -9,21 +9,12 @@
 #include <QDir>
 #include <QMessageBox>
 
-QString iwadDir;
-QString modDir;
-QJsonArray sourcePorts;
-
-QString selPort;
-QString selIwad;
-QStringList selMods;
-QString portArgs;
-
 int MainWindow::readJson(QString path) {
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QMessageBox m;
         m.critical(0,"Error",path+" not found!");
-        return 1;
+        return -1;
     }
 
     QByteArray data = file.readAll();
@@ -34,25 +25,25 @@ int MainWindow::readJson(QString path) {
     if (doc.isObject()) {
         QJsonObject obj = doc.object();
 
-        iwadDir = obj["iwadDir"].toString();
-        modDir = obj["modDir"].toString();
-        sourcePorts = obj["sourcePorts"].toArray();
+        this->iwadDir = obj["iwadDir"].toString();
+        this->modDir = obj["modDir"].toString();
+        this->sourcePorts = obj["sourcePorts"].toArray();
 
-        if (iwadDir == "" || modDir == "" || sourcePorts.count() == 0) {
+        if (this->iwadDir == "" || this->modDir == "" || this->sourcePorts.count() == 0) {
             QMessageBox m;
             m.critical(0,"Error", "Please specify iwadDir, modDir and sourcePorts.");
-            return 1;
+            return -1;
         }
     } else {
         QMessageBox m;
         m.critical(0,"Error", path+" is in invalid format.");
-        return 1;
+        return -1;
     }
 
     return 0;
 }
 
-QStringList getDirItems(QString path) {
+QStringList MainWindow::getDirItems(QString path) {
     QDir directory(path);
     QStringList list = directory.entryList();
     list.remove(0,2);
@@ -63,18 +54,15 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    readJson("search_dirs.json");
     ui->setupUi(this);
-    ui->iwadCombo->addItems(getDirItems(iwadDir));
-    foreach (const QJsonValue value, sourcePorts) {
+
+    if(readJson(":/search_dirs.json")!=0) exit(1);
+
+    ui->iwadCombo->addItems(getDirItems(this->iwadDir));
+    foreach (const QJsonValue value, this->sourcePorts) {
         ui->spCombo->addItem(value.toString());
     }
     ui->modList->addItems(getDirItems(modDir));
-    selPort = ui->spCombo->currentText();
-    selIwad = ui->iwadCombo->currentText();
-    foreach (const QListWidgetItem* value, ui->modList->selectedItems()) {
-        selMods.append(value->text());
-    }
 }
 
 MainWindow::~MainWindow()
@@ -86,6 +74,15 @@ void MainWindow::on_playButton_clicked()
 {
     QProcess process;
     QStringList args;
+
+    QString selPort = this->ui->spCombo->currentText();
+    QString selIwad = this->ui->iwadCombo->currentText();
+    QStringList selMods;
+    foreach (const QListWidgetItem* value, this->ui->modList->selectedItems()) {
+        selMods.append(value->text());
+    }
+    QString portArgs = this->ui->argsEdit->text();
+
     args << "-iwad" << iwadDir+"/"+selIwad;
     if (portArgs.length() > 0) {
         foreach (QString a, portArgs.split(" ")) {
@@ -104,30 +101,8 @@ void MainWindow::on_playButton_clicked()
     process.waitForFinished();
 }
 
-
-void MainWindow::on_spCombo_currentTextChanged(const QString &arg1)
+void MainWindow::on_actionAdd_Source_Port_triggered()
 {
-    selPort = arg1;
-}
 
-
-void MainWindow::on_iwadCombo_currentTextChanged(const QString &arg1)
-{
-    selIwad = arg1;
-}
-
-
-void MainWindow::on_argsEdit_textChanged(const QString &arg1)
-{
-    portArgs = arg1;
-}
-
-
-void MainWindow::on_modList_itemSelectionChanged()
-{
-    selMods.clear();
-    foreach (const QListWidgetItem* value, ui->modList->selectedItems()) {
-        selMods.append(value->text());
-    }
 }
 
